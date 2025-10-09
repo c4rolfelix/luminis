@@ -7,6 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\ViewModels\ForgotPasswordViewModel.cs" />
+    <Compile Remove="Models\ViewModels\ResetPasswordViewModel.cs" />
+    <Compile Remove="Views\Account\ForgotPassword.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Account\EsqueceuSenha.cshtml" />
+    <Content Remove="Views\Account\ForgotPassword.cshtml" />
+    <Content Remove="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Remove="Views\Account\ResetPassword.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Pacotes do Entity Framework Core -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7" />

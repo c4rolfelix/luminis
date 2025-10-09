@@ -4,80 +4,167 @@
 }
 
 <div class="container mt-4">
-    <h2>Painel Administrativo - Gerenciar Psicólogos</h2>
+    <h2 class="text-primary fw-bold">Painel Administrativo</h2>
+    <p class="lead">Gerenciar perfis de psicólogos e visibilidade na plataforma.</p>
     <hr />
 
+    @* Mensagem de Sucesso *@
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success mb-3" role="alert">
             @TempData["SuccessMessage"]
         </div>
     }
+    
+    @* Formulário de Pesquisa *@
+    <form asp-controller="Admin" asp-action="Index" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="searchString" class="form-control" placeholder="Pesquisar por nome, email ou CRP" value="@ViewData["CurrentFilter"]">
+            <button class="btn btn-primary" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </form>
 
+    @* Tabela de Psicólogos *@
     @if (Model != null && Model.Any())
     {
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Nome Completo</th>
-                    <th>E-mail</th>
-                    <th>CRP</th>
-                    <th>WhatsApp</th>
-                    <th>Especialidades</th>
-                    <th>Data Cadastro</th>
-                    <th>Status</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var psicologo in Model)
-                {
+        <div class="table-responsive shadow-sm rounded-3">
+            <table class="table table-striped table-hover text-center align-middle mb-0">
+                <thead style="background-color: #064fc5; color: white;">
                     <tr>
-                        <td>@psicologo.Nome @psicologo.Sobrenome</td>
-                        <td>@psicologo.Email</td>
-                        <td>@psicologo.CRP</td>
-                        <td>@psicologo.WhatsApp</td>
-                        <td>
-                            @if (psicologo.Especialidades != null && psicologo.Especialidades.Any())
-                            {
-                                @string.Join(", ", psicologo.Especialidades.Select(e => e.Nome))
-                            }
-                            else
-                            {
-                                <span>N/A</span>
-                            }
-                        </td>
-                        <td>@psicologo.DataCadastro.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td>
-                            @if (psicologo.Ativo)
-                            {
-                                <span class="badge bg-success">Ativo</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">Inativo</span>
-                            }
-                        </td>
-                        <td>
-                            <form asp-action="ToggleActive" asp-controller="Admin" method="post" style="display:inline;">
-                                <input type="hidden" name="id" value="@psicologo.Id" />
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-sm @(psicologo.Ativo ? "btn-warning" : "btn-success")">
-                                    @(psicologo.Ativo ? "Desativar" : "Ativar")
-                                </button>
-                            </form>
-                            @* Futuros botões de Editar/Detalhes/Excluir aqui *@
-                            @* <a asp-controller="Admin" asp-action="Edit" asp-route-id="@psicologo.Id" class="btn btn-sm btn-info ms-1">Editar</a> *@
-                        </td>
+                        <th scope="col">Nome Completo</th>
+                        <th scope="col" class="d-none-mobile">E-mail</th>
+                        <th scope="col" class="d-none-mobile">CRP</th>
+                        <th scope="col" class="d-none-mobile">WhatsApp</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Destaque</th>
+                        <th scope="col">Ações</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var psicologo in Model)
+                    {
+                        <tr>
+                            <td>@psicologo.Nome @psicologo.Sobrenome</td>
+                            <td class="d-none-mobile">@psicologo.Email</td>
+                            <td class="d-none-mobile">@psicologo.CRP</td>
+                            <td class="d-none-mobile">@psicologo.WhatsApp</td>
+                            <td>
+                                @if (psicologo.Ativo)
+                                {
+                                    <span class="badge bg-success">Ativo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inativo</span>
+                                }
+                            </td>
+                            <td>
+                                @if (psicologo.EmDestaque)
+                                {
+                                    <span id="destaque-status-@psicologo.Id" class="badge bg-info text-dark">Em Destaque</span>
+                                }
+                                else
+                                {
+                                    <span id="destaque-status-@psicologo.Id" class="badge bg-secondary">Normal</span>
+                                }
+                            </td>
+                            <td class="d-flex justify-content-center flex-nowrap gap-1">
+                                <form asp-action="ToggleActive" asp-controller="Admin" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@psicologo.Id" />
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm @(psicologo.Ativo ? "btn-warning" : "btn-success")" title="@(psicologo.Ativo ? "Desativar Perfil" : "Ativar Perfil")">
+                                        <i class="bi @(psicologo.Ativo ? "bi-eye-slash-fill" : "bi-eye-fill")"></i>
+                                    </button>
+                                </form>
+
+                                @* Botão de Destaque com AJAX *@
+                                <button type="button" class="btn btn-sm @(psicologo.EmDestaque ? "btn-outline-info" : "btn-info") toggle-destaque-btn" data-id="@psicologo.Id" title="@(psicologo.EmDestaque ? "Remover do Destaque" : "Colocar em Destaque")">
+                                    <i class="bi bi-star-fill"></i>
+                                </button>
+
+                                <form asp-action="Delete" asp-controller="Admin" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@psicologo.Id" />
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este perfil? Esta ação é irreversível.');" title="Excluir Perfil">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
     else
     {
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-info text-center" role="alert">
             Nenhum psicólogo cadastrado ainda.
         </div>
     }
 </div>
+
+@section Scripts {
+    <style>
+        /* Estilos para ocultar colunas em telas de celular */
+        @@media (max-width: 767px) {
+            .d-none-mobile {
+                display: none;
+            }
+        }
+    </style>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    @* Adicionamos um campo oculto para o token no corpo da View para o JS ler *@
+    @Html.AntiForgeryToken()
+
+    <script>
+        $(document).ready(function() {
+            // Lemos o token do campo oculto gerado pelo @Html.AntiForgeryToken()
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $('.toggle-destaque-btn').on('click', function(e) {
+                e.preventDefault();
+                var btn = $(this);
+                var psicologoId = btn.data('id');
+                // btn.hasClass('btn-info') é true se ESTÁ destacado (cor azul preenchida)
+                var isCurrentlyFeatured = btn.hasClass('btn-info');
+                
+                $.ajax({
+                    url: '@Url.Action("ToggleDestaque", "Admin")',
+                    type: 'POST',
+                    // Incluímos o token no corpo do dado (data)
+                    data: { 
+                        id: psicologoId,
+                        '__RequestVerificationToken': token 
+                    },
+                    success: function(response) {
+                        // Inverte a classe do botão
+                        btn.toggleClass('btn-info btn-outline-info');
+                        
+                        // Atualiza o texto do tooltip
+                        var newTitle = isCurrentlyFeatured ? 'Colocar em Destaque' : 'Remover do Destaque';
+                        btn.attr('title', newTitle);
+                        
+                        // Atualiza o badge de status (Em Destaque <-> Normal)
+                        var statusBadge = $('#destaque-status-' + psicologoId);
+                        
+                        if (isCurrentlyFeatured) {
+                            // Se estava destacado, vai para normal
+                            statusBadge.removeClass('bg-info text-dark').addClass('bg-secondary').text('Normal');
+                        } else {
+                            // Se estava normal, vai para destaque
+                            statusBadge.removeClass('bg-secondary').addClass('bg-info text-dark').text('Em Destaque');
+                        }
+                    },
+                    error: function(xhr) {
+                        // Exibimos uma mensagem mais amigável
+                        alert('Ação bloqueada! Verifique se seu login de administrador está ativo ou se o servidor está online.');
+                    }
+                });
+            });
+        });
+    </script>
+}

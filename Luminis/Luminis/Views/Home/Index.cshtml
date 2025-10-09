@@ -1,6 +1,9 @@
 ﻿@model IEnumerable<Luminis.Models.Psicologo>
 @{
     ViewData["Title"] = "Luminis - Conectando você ao bem-estar";
+    // Separamos os psicólogos em destaque (se houver) dos demais
+    var psicologosEmDestaque = Model?.Where(p => p.EmDestaque).ToList();
+    var outrosPsicologos = Model?.Where(p => !p.EmDestaque).ToList();
 }
 
 <div class="jumbotron text-center bg-light py-5">
@@ -10,29 +13,126 @@
     <p>
         Explore nossa lista de psicólogos qualificados e inicie sua jornada para o bem-estar.
     </p>
-    <p class="d-grid gap-2 d-md-flex justify-content-center">
-        <a class="btn btn-primary btn-lg" asp-controller="Psicologo" asp-action="Index" role="button">Para Pacientes</a>
-        <a class="btn btn-outline-primary btn-lg ms-md-2" href="#" role="button">Para Psicólogos (Em Breve)</a> 
-    </p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        @if (User.IsInRole("Admin"))
+        {
+            @* Botão para ADMIN logado *@
+            <p class="d-grid gap-2 d-md-flex justify-content-center">
+                <a class="btn btn-primary btn-lg" asp-controller="Admin" asp-action="Index" role="button">Gerenciar Psicólogos</a>
+            </p>
+        }
+        else // Se for Psicólogo
+        {
+            @* Botão para PSICÓLOGO logado *@
+            <p class="d-grid gap-2 d-md-flex justify-content-center">
+                <a class="btn btn-primary btn-lg" asp-controller="Psicologo" asp-action="EditProfile" role="button">Editar Perfil</a>
+            </p>
+        }
+    }
+    else
+    {
+        @* Botões para usuário NÃO logado *@
+        <p class="d-grid gap-2 d-md-flex justify-content-center">
+            <a class="btn btn-primary btn-lg" asp-controller="Psicologo" asp-action="Index" role="button">Para Pacientes</a>
+            <a asp-controller="Home" asp-action="Planos" class="btn btn-outline-primary btn-lg">Para Psicólogos</a>
+        </p>
+    }
 </div>
 
 <div class="container mt-5">
-    <h3 class="text-center mb-4">Conheça Nossos Psicólogos</h3>
-
-    @if (Model != null && Model.Any())
+    @* Seção de Psicólogos em Destaque *@
+    @if (psicologosEmDestaque != null && psicologosEmDestaque.Any())
     {
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var psicologo in Model)
+        <h3 class="text-center mb-4">Psicólogos em Destaque</h3>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+            @foreach (var psicologo in psicologosEmDestaque)
             {
                 <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <img src="@(string.IsNullOrEmpty(psicologo.FotoUrl) ? "/images/default-avatar.png" : psicologo.FotoUrl)"
-                             class="card-img-top profile-avatar-home" alt="Foto de @psicologo.Nome"
-                             onerror="this.onerror=null;this.src='/images/default-avatar.png';" />
+                    <div class="card h-100 shadow-lg featured-card">
+                        @* Cabeçalho do card de destaque com cor verde *@
+                        <div class="card-header text-center text-dark" style="background-color: #49d6bc; font-size: 18px;">
+                            <i class="bi bi-star-fill text-primary me-2"></i> Psicólogo Destaque
+                        </div>
+
+                        <div class="profile-avatar-wrapper">
+                            @if (string.IsNullOrEmpty(psicologo.FotoUrl))
+                            {
+                                @* NOVO: Placeholder de ícone se FotoUrl for nula/vazia *@
+                                <div class="profile-avatar-placeholder">
+                                    <i class="bi bi-person-circle"></i>
+                                </div>
+                            }
+                            else
+                            {
+                                @* Exibe a imagem se a FotoUrl existir *@
+                                <img src="@psicologo.FotoUrl"
+                                     class="profile-avatar-home" alt="Foto de @psicologo.Nome"
+                                     onerror="this.onerror=null;this.src='/images/default-avatar.png';" />
+                            }
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title">@psicologo.Nome @psicologo.Sobrenome</h5>
                             <p class="card-text">
                                 <strong>CRP:</strong> @psicologo.CRP<br />
+                                <strong>Idade:</strong> @psicologo.GetIdade() anos
+                                <br />
+                                <strong>Especialidades:</strong>
+                                @if (psicologo.Especialidades != null && psicologo.Especialidades.Any())
+                                {
+                                    @string.Join(", ", psicologo.Especialidades.Select(e => e.Nome).Take(2))
+                                    @if (psicologo.Especialidades.Count() > 2)
+                                    {
+                                        <span>...</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span>N/A</span>
+                                }
+                            </p>
+                            <a asp-controller="Psicologo" asp-action="Details" asp-route-id="@psicologo.Id" class="btn btn-sm btn-outline-primary mt-2">Ver Perfil</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <hr class="my-5" />
+    }
+
+
+    @* Seção de Outros Psicólogos (Aleatórios) *@
+    <h3 class="text-center mb-4">Conheça Nossos Psicólogos</h3>
+    @if (outrosPsicologos != null && outrosPsicologos.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var psicologo in outrosPsicologos)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+
+                        <div class="profile-avatar-wrapper">
+                            @if (string.IsNullOrEmpty(psicologo.FotoUrl))
+                            {
+                                @* NOVO: Placeholder de ícone se FotoUrl for nula/vazia *@
+                                <div class="profile-avatar-placeholder">
+                                    <i class="bi bi-person-circle"></i>
+                                </div>
+                            }
+                            else
+                            {
+                                @* Exibe a imagem se a FotoUrl existir *@
+                                <img src="@psicologo.FotoUrl"
+                                     class="profile-avatar-home" alt="Foto de @psicologo.Nome"
+                                     onerror="this.onerror=null;this.src='/images/default-avatar.png';" />
+                            }
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@psicologo.Nome @psicologo.Sobrenome</h5>
+                            <p class="card-text">
+                                <strong>CRP:</strong> @psicologo.CRP<br />
+                                <strong>Idade:</strong> @psicologo.GetIdade() anos
+                                <br />
                                 <strong>Especialidades:</strong>
                                 @if (psicologo.Especialidades != null && psicologo.Especialidades.Any())
                                 {
@@ -54,10 +154,12 @@
             }
         </div>
         <div class="text-center mt-5">
-            <a asp-controller="Psicologo" asp-action="Index" class="btn btn-lg btn-secondary">Ver Todos os Psicólogos</a>
+            <a asp-controller="Psicologo" asp-action="Index" class="text-muted text-decoration-underline">
+                Ver todos os psicólogos <i class="bi bi-arrow-right"></i>
+            </a>
         </div>
     }
-    else
+    else if (psicologosEmDestaque == null || !psicologosEmDestaque.Any()) // Se não houver nenhum psicólogo (destaque ou não)
     {
         <div class="alert alert-info text-center" role="alert">
             Nenhum psicólogo ativo para exibir no momento.
@@ -65,11 +167,50 @@
     }
 </div>
 
-<style>
-    .profile-avatar-home {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-bottom: 1px solid #eee;
-    }
-</style>
+@section Scripts {
+    <style>
+        /*
+                * 1. WRAPPER (O CÍRCULO) - Garante o formato e centralização
+                */
+        .profile-avatar-wrapper {
+            /* Tamanho fixo do círculo */
+            width: 150px;
+            height: 150px;
+            /* Centraliza o círculo horizontalmente dentro do card */
+            margin: 20px auto 10px auto;
+            /* Transforma o contêiner em círculo e esconde o que estiver fora */
+            border-radius: 50%;
+            overflow: hidden;
+            /* Estilos visuais */
+            border: 3px solid var(--bs-light);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 2. IMAGEM (A FOTO) - Garante que a imagem preencha o círculo sem distorção */
+        .profile-avatar-home {
+            width: 100%; /* 100% do wrapper (150px) */
+            height: 100%; /* 100% do wrapper (150px) */
+            /* CRUCIAL: Preenche o espaço, mantendo a proporção e cortando o excesso */
+            object-fit: cover;
+        }
+
+        /* 3. NOVO: ESTILO PARA O PLACEHOLDER (ÍCONE DE USUÁRIO) NA HOME */
+        .profile-avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: #e9ecef; /* Fundo cinza claro */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d; /* Ícone cinza escuro */
+            font-size: 80px; /* Tamanho grande para preencher o círculo */
+        }
+
+        /* Estilo para os cards de psicólogos em destaque (Mantenha este) */
+        .card.featured-card {
+            border-width: 5px;
+            border-color: #49d6bc !important;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+}

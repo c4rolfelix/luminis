@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Nossos Planos";
+}
+
+<div class="container my-5">
+    <h1 class="text-primary fw-bold text-center mb-4">Conheça Nossos Planos para Psicólogos</h1>
+    <p class="lead text-center">Junte-se à comunidade Luminis e expanda seu alcance profissional.</p>
+
+    <div class="row justify-content-center mt-5">
+
+        @* PLANO MENSAL *@
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="card-title text-primary">Plano Mensal</h3>
+                    <p class="card-text text-muted">Flexibilidade para começar.</p>
+                    <ul class="list-unstyled text-start mx-auto mt-4" style="max-width: 250px;">
+                        <li><i class="bi bi-check-circle-fill text-success"></i> Perfil público completo</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i> Busca por especialidade</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i> Contato via WhatsApp</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i> Suporte básico</li>
+                    </ul>
+                    <h4 class="card-subtitle mb-2 text-muted mt-4">R$ XX,XX / mês</h4>
+                    <p class="card-text text-sm">Pagamento via PIX direto com o administrador.</p>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg mt-3">Cadastre-se Agora!</a>
+                </div>
+            </div>
+        </div>
+
+        @* PLANO TRIMESTRAL (DESTAQUE) *@
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-lg" style="border: 3px solid var(--luminis-blue-dark);">
+                <div class="card-header text-white text-center fw-bold" style="background-color: var(--luminis-blue-dark);">
+                    <h4 class="mb-0">Mais Popular!</h4>
+                </div>
+                <div class="card-body text-center">
+                    <h3 class="card-title text-primary">Plano Trimestral</h3>
+                    <p class="card-text text-muted">Economia e visibilidade aprimorada.</p>
+                    <ul class="list-unstyled text-start mx-auto mt-4" style="max-width: 250px;">
+                        <li><i class="bi bi-check-circle-fill text-success"></i> Todos os recursos do Plano Mensal</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i> Destaque na página inicial</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i> Desconto progressivo (a definir)</li>
+                    </ul>
+                    <h4 class="card-subtitle mb-2 text-muted mt-4">R$ XX,XX / trimestre</h4>
+                    <p class="card-text text-sm">Pagamento via PIX direto com o administrador.</p>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg mt-3">Cadastre-se Agora!</a>
+                </div>
+            </div>
+        </div>
+
+        @* PLANO ANUAL *@
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="card-title text-primary">Plano Anual</h3>
+                    <p class="card-text text-muted">O melhor custo-benefício para o ano todo.</p>
+                    <ul class="list-unstyled text-start mx-auto mt-4" style="max-width: 250px;">
+                        <li><i class="bi bi-check-circle-fill text-success"></i> Todos os recursos do Plano Trimestral</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i> Suporte prioritário</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i> Maior desconto progressivo (a definir)</li>
+                    </ul>
+                    <h4 class="card-subtitle mb-2 text-muted mt-4">R$ XX,XX / ano</h4>
+                    <p class="card-text text-sm">Pagamento via PIX direto com o administrador.</p>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg mt-3">Cadastre-se Agora!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <p>Interessou-se por nossos planos? Escolha um deles e faça seu cadastro agora.</p>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg">Cadastre-se Agora!</a>
+    </div>
+
+    @* Botão Voltar *@
+    <div class="text-center mt-4">
+        <a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-underline">
+            <i class="bi bi-arrow-left"></i> Voltar para a Home
+        </a>
+    </div>
+</div>

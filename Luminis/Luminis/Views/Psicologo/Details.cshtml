@@ -1,53 +1,84 @@
-﻿@model Luminis.Models.Psicologo 
+﻿@model Luminis.Models.Psicologo
 @{
     ViewData["Title"] = $"Perfil de {Model?.Nome} {Model?.Sobrenome}";
 }
 
-<div class="container mt-4">
-    <div class="row">
+<div class="container my-5">
+    <div class="row g-5">
+
+        @* Coluna da Foto e Informações de Contato *@
         <div class="col-md-4 text-center">
-            <img src="@(string.IsNullOrEmpty(Model?.FotoUrl) ? "/images/default-avatar.png" : Model?.FotoUrl)"
-                 class="img-fluid rounded-circle mb-3 profile-detail-avatar" alt="Foto de @Model?.Nome"
-                 onerror="this.onerror=null;this.src='/images/default-avatar.png';" />
-            <h3>@Model?.Nome @Model?.Sobrenome</h3>
-            <p class="text-muted">CRP: @Model?.CRP</p>
-            <a href="https://wa.me/@Model?.WhatsApp" target="_blank" class="btn btn-success btn-lg mb-3">
-                <i class="bi bi-whatsapp"></i> Agendar via WhatsApp
-            </a>
-        </div>
-        <div class="col-md-8">
-            <h4>Sobre Mim</h4>
-            <p>
-                @(string.IsNullOrEmpty(Model?.Biografia) ? "O psicólogo ainda não adicionou uma biografia." : Model?.Biografia)
-            </p>
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <img src="@(string.IsNullOrEmpty(Model?.FotoUrl) ? "/images/default-avatar.png" : Model?.FotoUrl)"
+                         class="img-fluid rounded-circle mb-3 profile-detail-avatar" alt="Foto de @Model?.Nome"
+                         onerror="this.onerror=null;this.src='/images/default-avatar.png';" />
+                    <h3>@Model?.Nome @Model?.Sobrenome</h3>
+                    <p class="text-muted mb-1">CRP: @Model?.CRP</p>
+                    <p class="text-muted mb-3">Idade: @Model?.GetIdade() anos</p>
 
-            <h4>Especialidades</h4>
-            @if (Model?.Especialidades != null && Model.Especialidades.Any())
-            {
-                <ul class="list-group mb-3">
-                    @foreach (var especialidade in Model.Especialidades)
+                    @if (!string.IsNullOrEmpty(Model?.WhatsAppUrl))
                     {
-                        <li class="list-group-item">@especialidade.Nome</li>
+                        <a href="@Model?.WhatsAppUrl" target="_blank" class="btn btn-primary btn-sm mt-3">
+                            <i class="bi bi-calendar-check me-2"></i> Agendar Agora
+                        </a>
                     }
-                </ul>
-            }
-            else
-            {
-                <p>Este psicólogo ainda não listou suas especialidades.</p>
-            }
+                    else
+                    {
+                        <p class="text-danger mt-3">Link de agendamento não disponível.</p>
+                    }
+                </div>
+            </div>
+        </div>
 
+        @* Coluna da Biografia e Especialidades *@
+        <div class="col-md-8">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4>Sobre Mim</h4>
+                    <p>
+                        @(string.IsNullOrEmpty(Model?.Biografia) ? "O psicólogo ainda não adicionou uma biografia." : Model?.Biografia)
+                    </p>
+
+                    <h4 class="mt-4">Especialidades</h4>
+                    @if (Model?.Especialidades != null && Model.Especialidades.Any())
+                    {
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var especialidade in Model.Especialidades)
+                            {
+                                <span class="badge rounded-pill bg-primary">@especialidade.Nome</span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Este psicólogo ainda não listou suas especialidades.</p>
+                    }
+                </div>
+            </div>
             <div class="mt-4">
-                <a asp-controller="Psicologo" asp-action="Index" class="btn btn-outline-secondary">Voltar para a lista de psicólogos</a>
+                <a asp-controller="Psicologo" asp-action="Index" class="text-muted text-decoration-none">
+                    <i class="bi bi-arrow-left"></i> Voltar para a lista de psicólogos
+                </a>
             </div>
         </div>
     </div>
 </div>
 
-<style>
-    .profile-detail-avatar {
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
-        border: 3px solid #007bff; 
-    }
-</style>
+@section Scripts {
+    <style>
+        .profile-detail-avatar {
+            /* AUMENTADO: Tamanho fixo e proporção de aspecto (220x220) */
+            width: 320px;
+            height: 320px;
+            /* CRUCIAL: Garante que a imagem preencha a área sem distorcer, cortando o excesso */
+            object-fit: cover;
+            /* Borda Branca */
+            border: 5px solid #fff;
+            /* Sombra suave para destacar */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            /* Garante que o rounded-circle do Bootstrap funcione */
+            border-radius: 50% !important;
+        }
+    </style>
+}

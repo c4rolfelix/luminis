@@ -1,70 +1,39 @@
-# Visual Studio
-.vs/
-*.suo
-*.user
-*.userosf
-*.sln.docstates
-
-# Binaries
+# Exclui binários e caches de projeto (crucial)
+[Bb]in/
+[Oo]bj/
 [Dd]ebug/
 [Rr]elease/
+
+# Exclui arquivos de usuário do Visual Studio
+*.suo
+*.user
+*.userosscore
+*.sln.docstates
+
+# Exclui arquivos de pacote de dependência
+*.nuget
+*.snupkg
+
+# Exclui arquivos temporários e caches de build
+**/*.tmp
+**/*.log
+**/*.bak
+**/*.cache
+
+# Exclui pastas e arquivos gerados pelo .NET Core
+**/appsettings.Development.json
+**/bundleconfig.json
+**/node_modules/
+.vs/
+.vscode/
+
+# Arquivos de metadados do Solution
+*.dll
 *.exe
 *.pdb
-*.dll
-*.obj
-*.o
-*.lib
-*.so
-*.dylib
-*.a
-*.exp
-*.ilk
-*.log
-*.bin
-*.tmp
-*.temp
-*.backup
-*.bak
-*.old
-*.orig
-*.rej
-*.sbr
-*.bsc
-*.res
-*.pch
-*.idb
-*.ipch
-*.aps
-*.ncb
-*.opensdf
-*.sdf
-*.cache
-*.db
-*.tlog
-*.vshost.*
+*.intellisense.js
+*.js.map
 
-# NuGet
-*.nupkg
-*.snupkg
-*.props
-*.targets
-packages/
-*.nuget.g.props
-*.nuget.g.targets
-
-# Entity Framework Core Migrations (se você não quiser versionar os arquivos de snapshot/designer)
-# Mas geralmente é bom versionar as migrations. Esta linha é mais para o snapshot.
-*.ModelSnapshot.cs
-
-# User-specific files
-*.userprefs
-*.vspscc
-*.vssscc
-*.vspcc
-*.scc
-
-# Other common files
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-.DS_Store
+# Logs de teste e cobertura
+TestResults/
+coverlet/

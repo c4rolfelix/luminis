@@ -22,17 +22,24 @@ namespace Luminis.Controllers
             // Carrega algumas especialidades para a busca rápida na Home
             ViewBag.Especialidades = await _context.Especialidades
                                                    .OrderBy(e => e.Nome)
-                                                   .Take(5) 
+                                                   .Take(5)
                                                    .ToListAsync();
 
             // Carrega uma pequena amostra de psicólogos ativos para exibir na Home
             var psicologosAmostra = await _context.Psicologos
-                                                 .Where(p => p.Ativo == true)
-                                                 .Include(p => p.Especialidades)
-                                                 .Take(6) 
-                                                 .ToListAsync();
+                                                  .Where(p => p.Ativo == true)
+                                                  .Include(p => p.Especialidades)
+                                                  .OrderByDescending(p => p.EmDestaque) // Prioriza os em destaque
+                                                  .ThenBy(p => Guid.NewGuid()) // Ordena os demais aleatoriamente
+                                                  .Take(3)
+                                                  .ToListAsync();
 
-            return View(psicologosAmostra); // Passa a amostra de psicólogos para a View
+            return View(psicologosAmostra);
+        }
+
+        public IActionResult Planos()
+        {
+            return View();
         }
 
         public IActionResult Privacy()

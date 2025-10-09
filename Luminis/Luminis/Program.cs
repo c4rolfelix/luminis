@@ -1,33 +1,43 @@
-using Luminis.Data; 
+using Luminis.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore; 
-using Microsoft.AspNetCore.Identity; 
-using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Adiciona suporte a controllers e views
 builder.Services.AddControllersWithViews();
 
+// Configura o banco de dados
 builder.Services.AddDbContext<LuminisDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false) 
-    .AddRoles<IdentityRole>() // Habilita o suporte a roles como admin
-    .AddEntityFrameworkStores<LuminisDbContext>(); 
+// Configura o Identity com regras de senha fortes e suporte a roles
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Lockout.MaxFailedAccessAttempts = 5;
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Account/Login"; // Redireciona para esta URL se o usuário não estiver autenticado e tentar acessar uma área restrita
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); 
-        options.SlidingExpiration = true; 
-        options.AccessDeniedPath = "/Home/AccessDenied"; 
-    });
+    // Regras de senha fortes
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 8;
+})
+.AddEntityFrameworkStores<LuminisDbContext>()
+.AddDefaultTokenProviders();
 
+// Configura os cookies de autenticação
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
 
 var app = builder.Build();
 
+// Configura tratamento de erros e segurança
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -39,9 +49,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); 
-app.UseAuthorization();  
+app.UseAuthentication();
+app.UseAuthorization();
 
+// Define a rota padrão
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

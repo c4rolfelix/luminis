@@ -1,0 +1,299 @@
+﻿@model Luminis.Models.ViewModels.PsicologoEditViewModel
+@using Microsoft.AspNetCore.Identity
+@using Luminis.Models
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Editar Perfil";
+    var allEspecialidades = ViewBag.AllEspecialidades as List<Luminis.Models.Especialidade>;
+    // Variavel para o URL da foto atual
+    var fotoUrl = string.IsNullOrEmpty(Model.FotoUrl) ? "/images/default-avatar.png" : Model.FotoUrl;
+    // Verifica se é o avatar default para mostrar o ícone
+    var isDefaultAvatar = fotoUrl.EndsWith("default-avatar.png");
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+
+            <h2 class="text-center mb-4">Editar Meu Perfil</h2>
+            <hr />
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mb-3" role="alert">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+            <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="FotoUrl" id="currentFotoUrl" /> @* Campo hidden para gerenciar a URL da foto atual *@
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                @* NOVO: Seção de Upload de Foto e Pré-visualização *@
+                <div class="form-group mb-4 text-center">
+                    <label class="control-label mb-2">Foto de Perfil</label>
+                    <div class="profile-image-container">
+                        
+                        @* ÍCONE DE REMOÇÃO (O "X" ACIMA/AO LADO DO CÍRCULO) *@
+                        <button type="button" 
+                                id="removeImageButton" 
+                                title="Remover Foto Atual"
+                                class="btn-remove-image @(isDefaultAvatar ? "d-none" : "")">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </button>
+                        
+                        @* Pré-visualização da Imagem/Ícone *@
+                        <div id="imagePlaceholder" class="@(isDefaultAvatar ? "d-block" : "d-none")">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+
+                        <img id="imagePreview" src="@fotoUrl" 
+                             alt="Pré-visualização" 
+                             class="profile-image-preview @(isDefaultAvatar ? "d-none" : "d-block")">
+
+                        @* Campo de Input File (Escondido) *@
+                        <input type="file" id="profileImageInput" name="ProfileImageFile" class="form-control d-none" accept="image/*">
+                        
+                        @* Botão de Upload *@
+                        <label for="profileImageInput" class="upload-button">
+                            <i class="bi bi-camera-fill"></i>
+                        </label>
+                    </div>
+                    
+                    <span asp-validation-for="ProfileImageFile" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Nome" class="form-label"></label>
+                        <input asp-for="Nome" class="form-control" />
+                        <span asp-validation-for="Nome" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Sobrenome" class="form-label"></label>
+                        <input asp-for="Sobrenome" class="form-control" />
+                        <span asp-validation-for="Sobrenome" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CRP" class="form-label"></label>
+                    <input asp-for="CRP" class="form-control" />
+                    <span asp-validation-for="CRP" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CPF" class="control-label"></label>
+                    <input asp-for="CPF" class="form-control" readonly />
+                    <span asp-validation-for="CPF" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" readonly />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Biografia" class="form-label"></label>
+                    <textarea asp-for="Biografia" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Biografia" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="WhatsApp" class="form-label"></label>
+                        <input asp-for="WhatsApp" class="form-control" />
+                        <span asp-validation-for="WhatsApp" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="WhatsAppUrl" class="form-label"></label>
+                        <input asp-for="WhatsAppUrl" class="form-control" />
+                        <div class="form-text text-muted">
+                            <small>Exemplo: https://wa.me/5511999999999</small>
+                        </div>
+                        <span asp-validation-for="WhatsAppUrl" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DataNascimento" class="form-label"></label>
+                    <input asp-for="DataNascimento" class="form-control" type="date" />
+                    <span asp-validation-for="DataNascimento" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="EspecialidadesSelecionadasIds" class="control-label"></label>
+                    <select asp-for="EspecialidadesSelecionadasIds" class="form-control select2-multi" multiple="multiple" style="width: 100%;">
+                        @if (allEspecialidades != null)
+                        {
+                            foreach (var especialidade in allEspecialidades)
+                            {
+                                <option value="@especialidade.Id">@especialidade.Nome</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="EspecialidadesSelecionadasIds" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+        <div class="text-center mt-5">
+            <form asp-action="DeleteAccount" method="post" onsubmit="return confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-link text-danger fs-5">
+                    Excluir conta
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.select2-multi').select2({
+                placeholder: "Selecione suas especialidades",
+                allowClear: true
+            });
+
+            // Preenche as especialidades selecionadas
+            var selectedEspecialidades = @Html.Raw(Json.Serialize(Model.EspecialidadesSelecionadasIds));
+            if (selectedEspecialidades && selectedEspecialidades.length > 0) {
+                $('.select2-multi').val(selectedEspecialidades).trigger('change');
+            }
+
+            // Variáveis do DOM
+            const imagePreview = $('#imagePreview');
+            const imagePlaceholder = $('#imagePlaceholder');
+            const imageInput = $('#profileImageInput');
+            const removeButton = $('#removeImageButton');
+            const currentFotoUrl = $('#currentFotoUrl');
+            const defaultAvatarUrl = '/images/default-avatar.png';
+
+            imageInput.on('change', function (e) {
+                if (e.target.files && e.target.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        // Exibe a nova imagem
+                        imagePreview.attr('src', e.target.result).removeClass('d-none').addClass('d-block');
+                        // Esconde o placeholder
+                        imagePlaceholder.removeClass('d-block').addClass('d-none');
+                        // Exibe o botão de remover
+                        removeButton.removeClass('d-none').addClass('d-block');
+                        // Limpa o campo hidden
+                        currentFotoUrl.val(''); 
+                    }
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+
+
+            removeButton.on('click', function () {
+                if (confirm('Tem certeza que deseja remover sua foto de perfil?')) {
+                    // 1. Volta para o estado de placeholder
+                    imagePreview.attr('src', defaultAvatarUrl).removeClass('d-block').addClass('d-none');
+                    imagePlaceholder.removeClass('d-none').addClass('d-block');
+                    
+                    // 2. Limpa o input file para evitar upload
+                    imageInput.val(''); 
+                    
+                    // 3. Define o valor no campo hidden para o backend processar a remoção
+                    currentFotoUrl.val(defaultAvatarUrl); 
+                    
+                    // 4. Esconde o botão de remover
+                    $(this).removeClass('d-block').addClass('d-none');
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        /* Variável de cor, se não estiver definida no seu _Layout */
+        :root {
+            --kumon-blue-medium: #007bff; /* Assumindo um azul padrão do Bootstrap */
+        }
+        
+        .profile-image-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 10px;
+        }
+
+        /* ÍCONE DE REMOÇÃO (O "X") */
+        .btn-remove-image {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            z-index: 10;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 1.6rem; 
+            line-height: 1;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Estilos do Círculo */
+        .profile-image-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid var(--kumon-blue-medium);
+        }
+        
+        /* Estilos do Placeholder */
+        #imagePlaceholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            border: 3px solid #ccc;
+            /* PROPRIEDADES DE CENTRALIZAÇÃO CORRIGIDAS */
+            display: flex;
+            align-items: center; /* Centraliza verticalmente */
+            justify-content: center; /* Centraliza horizontalmente */
+            /* FIM DA CORREÇÃO */
+            color: #6c757d;
+            font-size: 80px;
+        }
+
+        /* Estilos do Botão de Upload (Câmera) */
+        .upload-button {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: var(--kumon-blue-medium);
+            color: white;
+            border-radius: 50%;
+            padding: 8px;
+            cursor: pointer;
+            border: 2px solid white;
+            font-size: 1.2rem;
+            line-height: 1;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s;
+        }
+
+        .upload-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+}

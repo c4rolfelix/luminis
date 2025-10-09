@@ -1,22 +1,144 @@
+/* Importa a fonte Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    /* Cores Kumon */
+    --kumon-blue-dark: #004587;
+    --kumon-blue-medium: #0076a3;
+    --kumon-blue-light: #83b6c7;
+    --kumon-white: #f5f5f5;
+    --kumon-gray: #e9ecef;
+}
+
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-family: 'Poppins', sans-serif;
+    color: #343a40;
+}
+
+/* Estilo para o cabeçalho e navegação */
+.navbar-brand {
+    font-weight: 600;
+    color: var(--kumon-blue-dark) !important;
+}
+
+.nav-link.text-primary {
+    color: var(--kumon-blue-dark) !important;
+}
+
+/* Botões */
+.btn-primary {
+    color: #fff;
+    background-color: #064fc5;
+    border-color: #064fc5;
+}
+
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #49d6bc;
+        border-color: #49d6bc;
+    }
+
+.btn-outline-primary {
+    color: #064fc5;
+    border-color: #064fc5;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #49d6bc;
+        color: #fff;
+        border-color: #49d6bc;
+    }
+
+/* Jumbotron (seção de destaque na Home) */
+.jumbotron {
+    background-color: var(--kumon-blue-light);
+    color: var(--kumon-blue-dark);
+    padding: 4rem 2rem;
+    border-radius: 0.3rem;
+}
+
+    .jumbotron h1 {
+        font-weight: 600;
+    }
+
+    .jumbotron hr {
+        border-color: var(--kumon-blue-medium);
+    }
+
+/* Cards de Psicólogos */
+.card {
+    border-radius: 10px;
+    border: 1px solid var(--kumon-gray);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+
+.profile-avatar, .profile-avatar-home {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.card-header {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+/* Formulários */
+.form-control:focus {
+    border-color: var(--kumon-blue-medium);
+    box-shadow: 0 0 0 0.25rem rgba(0, 118, 163, 0.25);
+}
+
+/* Footer */
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+}
+
+.cadastro-ilustracao {
+    max-height: 450px;
+    / width: auto;
+}
+
+.table-responsive {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table thead tr:first-child th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.table thead tr:first-child th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.table tfoot tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+.table tfoot tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
 }
