@@ -142,3 +142,28 @@ body {
 .table tfoot tr:last-child td:last-child {
     border-bottom-right-radius: 10px;
 }
+.password-container {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6c757d; 
+    z-index: 10;
+}
+.registration-illustration {
+    /* 1. Ocupa 100% da largura da coluna */
+    width: 100%;
+    /* 2. Define a altura máxima para um bom impacto visual */
+    max-height: 550px;
+    /* 3. Garante que a imagem se ajuste à proporção e não estique */
+    object-fit: contain;
+    /* 4. Garante que a altura se ajuste automaticamente */
+    height: auto;
+    /* 5. Centraliza a imagem na coluna (caso o width não seja 100%) */
+    margin: 0 auto;
+}

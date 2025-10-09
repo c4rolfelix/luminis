@@ -6,9 +6,7 @@
 @{
     ViewData["Title"] = "Editar Perfil";
     var allEspecialidades = ViewBag.AllEspecialidades as List<Luminis.Models.Especialidade>;
-    // Variavel para o URL da foto atual
     var fotoUrl = string.IsNullOrEmpty(Model.FotoUrl) ? "/images/default-avatar.png" : Model.FotoUrl;
-    // Verifica se é o avatar default para mostrar o ícone
     var isDefaultAvatar = fotoUrl.EndsWith("default-avatar.png");
 }
 
@@ -29,16 +27,14 @@
             <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Id" />
-                <input type="hidden" asp-for="FotoUrl" id="currentFotoUrl" /> @* Campo hidden para gerenciar a URL da foto atual *@
+                <input type="hidden" asp-for="FotoUrl" id="currentFotoUrl" /> 
 
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                @* NOVO: Seção de Upload de Foto e Pré-visualização *@
                 <div class="form-group mb-4 text-center">
                     <label class="control-label mb-2">Foto de Perfil</label>
                     <div class="profile-image-container">
                         
-                        @* ÍCONE DE REMOÇÃO (O "X" ACIMA/AO LADO DO CÍRCULO) *@
                         <button type="button" 
                                 id="removeImageButton" 
                                 title="Remover Foto Atual"
@@ -46,7 +42,6 @@
                             <i class="bi bi-x-circle-fill"></i>
                         </button>
                         
-                        @* Pré-visualização da Imagem/Ícone *@
                         <div id="imagePlaceholder" class="@(isDefaultAvatar ? "d-block" : "d-none")">
                             <i class="bi bi-person-circle"></i>
                         </div>
@@ -55,10 +50,8 @@
                              alt="Pré-visualização" 
                              class="profile-image-preview @(isDefaultAvatar ? "d-none" : "d-block")">
 
-                        @* Campo de Input File (Escondido) *@
                         <input type="file" id="profileImageInput" name="ProfileImageFile" class="form-control d-none" accept="image/*">
                         
-                        @* Botão de Upload *@
                         <label for="profileImageInput" class="upload-button">
                             <i class="bi bi-camera-fill"></i>
                         </label>
@@ -170,13 +163,11 @@
                 allowClear: true
             });
 
-            // Preenche as especialidades selecionadas
             var selectedEspecialidades = @Html.Raw(Json.Serialize(Model.EspecialidadesSelecionadasIds));
             if (selectedEspecialidades && selectedEspecialidades.length > 0) {
                 $('.select2-multi').val(selectedEspecialidades).trigger('change');
             }
 
-            // Variáveis do DOM
             const imagePreview = $('#imagePreview');
             const imagePlaceholder = $('#imagePlaceholder');
             const imageInput = $('#profileImageInput');
@@ -188,13 +179,9 @@
                 if (e.target.files && e.target.files[0]) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
-                        // Exibe a nova imagem
                         imagePreview.attr('src', e.target.result).removeClass('d-none').addClass('d-block');
-                        // Esconde o placeholder
                         imagePlaceholder.removeClass('d-block').addClass('d-none');
-                        // Exibe o botão de remover
                         removeButton.removeClass('d-none').addClass('d-block');
-                        // Limpa o campo hidden
                         currentFotoUrl.val(''); 
                     }
                     reader.readAsDataURL(e.target.files[0]);
@@ -204,17 +191,13 @@
 
             removeButton.on('click', function () {
                 if (confirm('Tem certeza que deseja remover sua foto de perfil?')) {
-                    // 1. Volta para o estado de placeholder
                     imagePreview.attr('src', defaultAvatarUrl).removeClass('d-block').addClass('d-none');
                     imagePlaceholder.removeClass('d-none').addClass('d-block');
                     
-                    // 2. Limpa o input file para evitar upload
                     imageInput.val(''); 
                     
-                    // 3. Define o valor no campo hidden para o backend processar a remoção
                     currentFotoUrl.val(defaultAvatarUrl); 
                     
-                    // 4. Esconde o botão de remover
                     $(this).removeClass('d-block').addClass('d-none');
                 }
             });
@@ -222,9 +205,8 @@
     </script>
     
     <style>
-        /* Variável de cor, se não estiver definida no seu _Layout */
         :root {
-            --kumon-blue-medium: #007bff; /* Assumindo um azul padrão do Bootstrap */
+            --kumon-blue-medium: #007bff; 
         }
         
         .profile-image-container {
@@ -234,7 +216,6 @@
             margin: 0 auto 10px;
         }
 
-        /* ÍCONE DE REMOÇÃO (O "X") */
         .btn-remove-image {
             position: absolute;
             top: -5px;
@@ -250,7 +231,6 @@
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
         }
         
-        /* Estilos do Círculo */
         .profile-image-preview {
             width: 100%;
             height: 100%;
@@ -259,23 +239,19 @@
             border: 3px solid var(--kumon-blue-medium);
         }
         
-        /* Estilos do Placeholder */
         #imagePlaceholder {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             background-color: #e9ecef;
             border: 3px solid #ccc;
-            /* PROPRIEDADES DE CENTRALIZAÇÃO CORRIGIDAS */
             display: flex;
-            align-items: center; /* Centraliza verticalmente */
-            justify-content: center; /* Centraliza horizontalmente */
-            /* FIM DA CORREÇÃO */
+            align-items: center; 
+            justify-content: center; 
             color: #6c757d;
             font-size: 80px;
         }
 
-        /* Estilos do Botão de Upload (Câmera) */
         .upload-button {
             position: absolute;
             bottom: 0;

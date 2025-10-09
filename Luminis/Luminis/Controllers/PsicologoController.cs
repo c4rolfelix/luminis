@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity; // Necessário para UserManager e SignInManager
+using Microsoft.AspNetCore.Identity; 
 using System;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Hosting;
@@ -141,7 +141,6 @@ namespace Luminis.Controllers
                 ModelState.AddModelError("CRP", "Este CRP já está cadastrado para outro profissional.");
             }
 
-            // ... (Validação de Email omitida por brevidade, mas está correta no seu código)
 
             if (ModelState.IsValid)
             {
@@ -151,14 +150,8 @@ namespace Luminis.Controllers
                 bool isRemoveAction = model.FotoUrl == DEFAULT_AVATAR_URL && !string.IsNullOrEmpty(psicologo.FotoUrl) && psicologo.FotoUrl != DEFAULT_AVATAR_URL;
 
 
-                // ----------------------------------------------------
-                // 1. Lógica de GERENCIAMENTO DA FOTO
-                // ----------------------------------------------------
-
-                // A) Limpeza da foto antiga (seja por upload de nova ou por remoção)
                 if ((isNewFileUpload || isRemoveAction) && !string.IsNullOrEmpty(psicologo.FotoUrl) && psicologo.FotoUrl != DEFAULT_AVATAR_URL)
                 {
-                    // Deleta o arquivo físico antigo, se ele for um arquivo de upload local
                     if (psicologo.FotoUrl.StartsWith("/images/uploads/"))
                     {
                         string existingFilePath = Path.Combine(_webHostEnvironment.WebRootPath, psicologo.FotoUrl.TrimStart('/'));
@@ -168,21 +161,15 @@ namespace Luminis.Controllers
                             System.IO.File.Delete(existingFilePath);
                         }
                     }
-                    // IMPORTANTE: Se estamos fazendo upload de uma nova foto, a URL será sobrescrita depois. 
-                    // Se é apenas remoção, definimos a URL como null no passo B.
                 }
 
-                // B) Ação de Remoção
                 if (isRemoveAction)
                 {
-                    // Se o usuário clicou em remover, removemos o link do banco.
                     psicologo.FotoUrl = null;
                 }
 
-                // C) Ação de Novo Upload
                 else if (isNewFileUpload)
                 {
-                    // Lógica de upload da nova foto
                     if (!Directory.Exists(uploadsFolder))
                     {
                         Directory.CreateDirectory(uploadsFolder);
@@ -198,12 +185,7 @@ namespace Luminis.Controllers
 
                     psicologo.FotoUrl = "/images/uploads/" + uniqueFileName;
                 }
-                // ----------------------------------------------------
-
-
-                // ----------------------------------------------------
-                // 2. Atualização dos Outros Campos
-                // ----------------------------------------------------
+               
                 psicologo.Nome = model.Nome;
                 psicologo.Sobrenome = model.Sobrenome;
                 psicologo.CRP = model.CRP;
@@ -228,7 +210,7 @@ namespace Luminis.Controllers
                 }
 
                 _context.Update(psicologo);
-                await _context.SaveChangesAsync(); // A foto é removida do banco AQUI!
+                await _context.SaveChangesAsync(); 
 
                 TempData["SuccessMessage"] = "Seu perfil foi atualizado com sucesso! Ele aparecerá na página inicial e nas buscas após a autorização do administrador.";
                 return RedirectToAction(nameof(EditProfile));
@@ -268,7 +250,6 @@ namespace Luminis.Controllers
             var psicologo = await _context.Psicologos
                                             .SingleOrDefaultAsync(p => p.Email == identityUser.Email);
 
-            // 1. Exclusão da Foto de Perfil (se houver)
             if (psicologo != null && !string.IsNullOrEmpty(psicologo.FotoUrl))
             {
                 const string DEFAULT_AVATAR_URL = "/images/default-avatar.png";
@@ -279,19 +260,17 @@ namespace Luminis.Controllers
 
                     if (System.IO.File.Exists(existingFilePath))
                     {
-                        System.IO.File.Delete(existingFilePath); // Deleta o arquivo físico
+                        System.IO.File.Delete(existingFilePath); 
                     }
                 }
             }
 
-            // 2. Exclusão do registro do Psicólogo (dados do perfil)
             if (psicologo != null)
             {
                 _context.Psicologos.Remove(psicologo);
                 await _context.SaveChangesAsync();
             }
 
-            // 3. Exclusão da conta Identity (o login)
             var result = await _userManager.DeleteAsync(identityUser);
 
             if (!result.Succeeded)
@@ -300,12 +279,10 @@ namespace Luminis.Controllers
                 return RedirectToAction(nameof(EditProfile));
             }
 
-            // 4. Efetua o Sign Out após a exclusão bem-sucedida
-            await _signInManager.SignOutAsync(); // Usa o SignInManager
+            await _signInManager.SignOutAsync(); 
 
             TempData["SuccessMessage"] = "Sua conta foi excluída com sucesso. Sentiremos sua falta!";
 
-            // Redireciona para a página inicial
             return RedirectToAction("Index", "Home");
         }
     }

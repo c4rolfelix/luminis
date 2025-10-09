@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Luminis.Models
 {
-    // Esta classe representa a tabela de junção (Many-to-Many) entre Psicologo e Especialidade
     public class PsicologoEspecialidade
     {
         [Required]

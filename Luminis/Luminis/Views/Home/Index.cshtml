@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<Luminis.Models.Psicologo>
 @{
     ViewData["Title"] = "Luminis - Conectando você ao bem-estar";
-    // Separamos os psicólogos em destaque (se houver) dos demais
     var psicologosEmDestaque = Model?.Where(p => p.EmDestaque).ToList();
     var outrosPsicologos = Model?.Where(p => !p.EmDestaque).ToList();
 }
@@ -58,14 +57,12 @@
                         <div class="profile-avatar-wrapper">
                             @if (string.IsNullOrEmpty(psicologo.FotoUrl))
                             {
-                                @* NOVO: Placeholder de ícone se FotoUrl for nula/vazia *@
                                 <div class="profile-avatar-placeholder">
                                     <i class="bi bi-person-circle"></i>
                                 </div>
                             }
                             else
                             {
-                                @* Exibe a imagem se a FotoUrl existir *@
                                 <img src="@psicologo.FotoUrl"
                                      class="profile-avatar-home" alt="Foto de @psicologo.Nome"
                                      onerror="this.onerror=null;this.src='/images/default-avatar.png';" />
@@ -101,7 +98,7 @@
     }
 
 
-    @* Seção de Outros Psicólogos (Aleatórios) *@
+    @* Seção de Outros Psicólogos *@
     <h3 class="text-center mb-4">Conheça Nossos Psicólogos</h3>
     @if (outrosPsicologos != null && outrosPsicologos.Any())
     {
@@ -114,14 +111,12 @@
                         <div class="profile-avatar-wrapper">
                             @if (string.IsNullOrEmpty(psicologo.FotoUrl))
                             {
-                                @* NOVO: Placeholder de ícone se FotoUrl for nula/vazia *@
                                 <div class="profile-avatar-placeholder">
                                     <i class="bi bi-person-circle"></i>
                                 </div>
                             }
                             else
                             {
-                                @* Exibe a imagem se a FotoUrl existir *@
                                 <img src="@psicologo.FotoUrl"
                                      class="profile-avatar-home" alt="Foto de @psicologo.Nome"
                                      onerror="this.onerror=null;this.src='/images/default-avatar.png';" />
@@ -169,44 +164,33 @@
 
 @section Scripts {
     <style>
-        /*
-                * 1. WRAPPER (O CÍRCULO) - Garante o formato e centralização
-                */
         .profile-avatar-wrapper {
-            /* Tamanho fixo do círculo */
             width: 150px;
             height: 150px;
-            /* Centraliza o círculo horizontalmente dentro do card */
             margin: 20px auto 10px auto;
-            /* Transforma o contêiner em círculo e esconde o que estiver fora */
             border-radius: 50%;
             overflow: hidden;
-            /* Estilos visuais */
             border: 3px solid var(--bs-light);
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
         }
 
-        /* 2. IMAGEM (A FOTO) - Garante que a imagem preencha o círculo sem distorção */
         .profile-avatar-home {
-            width: 100%; /* 100% do wrapper (150px) */
-            height: 100%; /* 100% do wrapper (150px) */
-            /* CRUCIAL: Preenche o espaço, mantendo a proporção e cortando o excesso */
+            width: 100%; 
+            height: 100%; 
             object-fit: cover;
         }
 
-        /* 3. NOVO: ESTILO PARA O PLACEHOLDER (ÍCONE DE USUÁRIO) NA HOME */
         .profile-avatar-placeholder {
             width: 100%;
             height: 100%;
-            background-color: #e9ecef; /* Fundo cinza claro */
+            background-color: #e9ecef; 
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #6c757d; /* Ícone cinza escuro */
-            font-size: 80px; /* Tamanho grande para preencher o círculo */
+            color: #6c757d; 
+            font-size: 80px; 
         }
 
-        /* Estilo para os cards de psicólogos em destaque (Mantenha este) */
         .card.featured-card {
             border-width: 5px;
             border-color: #49d6bc !important;

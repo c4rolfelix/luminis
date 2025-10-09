@@ -1,6 +1,7 @@
 ﻿@model Luminis.Models.Psicologo
 @{
     ViewData["Title"] = $"Perfil de {Model?.Nome} {Model?.Sobrenome}";
+    var hasFoto = !string.IsNullOrEmpty(Model?.FotoUrl);
 }
 
 <div class="container my-5">
@@ -10,9 +11,22 @@
         <div class="col-md-4 text-center">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <img src="@(string.IsNullOrEmpty(Model?.FotoUrl) ? "/images/default-avatar.png" : Model?.FotoUrl)"
-                         class="img-fluid rounded-circle mb-3 profile-detail-avatar" alt="Foto de @Model?.Nome"
-                         onerror="this.onerror=null;this.src='/images/default-avatar.png';" />
+
+                    <div class="profile-detail-container mb-3">
+                        @if (hasFoto)
+                        {
+                            <img src="@Model?.FotoUrl"
+                                 class="profile-detail-avatar" alt="Foto de @Model?.Nome"
+                                 onerror="this.onerror=null;this.src='/images/default-avatar.png';" />
+                        }
+                        else
+                        {
+                            <div class="profile-detail-placeholder">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+                        }
+                    </div>
+
                     <h3>@Model?.Nome @Model?.Sobrenome</h3>
                     <p class="text-muted mb-1">CRP: @Model?.CRP</p>
                     <p class="text-muted mb-3">Idade: @Model?.GetIdade() anos</p>
@@ -56,29 +70,48 @@
                     }
                 </div>
             </div>
-            <div class="mt-4">
-                <a asp-controller="Psicologo" asp-action="Index" class="text-muted text-decoration-none">
-                    <i class="bi bi-arrow-left"></i> Voltar para a lista de psicólogos
-                </a>
-            </div>
+        </div>
+        <div class="mt-4 text-center text-decoration-underline">
+            <a asp-controller="Psicologo" asp-action="Index" class="text-muted text-decoration-none">
+                <i class="bi bi-arrow-left"></i> Voltar para a lista de psicólogos
+            </a>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <style>
-        .profile-detail-avatar {
-            /* AUMENTADO: Tamanho fixo e proporção de aspecto (220x220) */
-            width: 320px;
-            height: 320px;
-            /* CRUCIAL: Garante que a imagem preencha a área sem distorcer, cortando o excesso */
-            object-fit: cover;
-            /* Borda Branca */
+        .profile-detail-container {
+            max-width: 320px;
+            max-height: 320px;
+            width: 100%;
+            padding-bottom: 100%;
+            position: relative;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 50%;
             border: 5px solid #fff;
-            /* Sombra suave para destacar */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            /* Garante que o rounded-circle do Bootstrap funcione */
-            border-radius: 50% !important;
+        }
+
+        .profile-detail-avatar,
+        .profile-detail-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-detail-placeholder {
+            background-color: #e9ecef;
+            color: #6c757d;
+            font-size: 10vw;
+            max-font-size: 180px;
         }
     </style>
 }

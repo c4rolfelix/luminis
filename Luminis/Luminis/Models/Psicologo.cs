@@ -30,7 +30,7 @@ namespace Luminis.Models
         [DataType(DataType.Password)]
         public string? SenhaHash { get; set; }
 
-        [StringLength(500, ErrorMessage = "A biografia não pode exceder 500 caracteres.")]
+        [StringLength(1500, ErrorMessage = "A biografia não pode exceder 1500 caracteres.")]
         [DataType(DataType.MultilineText)]
         public string? Biografia { get; set; }
 
@@ -43,14 +43,12 @@ namespace Luminis.Models
         [Required(ErrorMessage = "O número de WhatsApp é obrigatório.")]
         public string WhatsApp { get; set; }
 
-        // >>> NOVO: Propriedade para o CPF (resolve CS0117 e CS1061) <<<
         [Required(ErrorMessage = "O CPF é obrigatório.")]
         [StringLength(14, ErrorMessage = "O CPF deve ter o formato 000.000.000-00", MinimumLength = 14)]
         [RegularExpression(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$", ErrorMessage = "O CPF deve ter o formato 000.000.000-00.")]
         [Display(Name = "CPF")]
         public string CPF { get; set; }
 
-        // >>> NOVO: Data de Nascimento (resolve CS0117 e CS1061) <<<
         [Required(ErrorMessage = "A data de nascimento é obrigatória.")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

@@ -31,7 +31,7 @@ namespace Luminis.Models.ViewModels
         [Display(Name = "CPF")]
         public string CPF { get; set; }
 
-        [StringLength(700, ErrorMessage = "A biografia não pode exceder 700 caracteres.")]
+        [StringLength(1500, ErrorMessage = "A biografia não pode exceder 1500 caracteres.")]
         [DataType(DataType.MultilineText)]
         public string? Biografia { get; set; }
 

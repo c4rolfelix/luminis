@@ -9,7 +9,7 @@
 
         @* Coluna da Ilustração (Esquerda) *@
         <div class="col-lg-6 col-md-8 text-center d-none d-md-block">
-            <img src="~/images/cadastrar-img.svg" class="img-fluid rounded" alt="Ilustração de bem-estar e psicologia">
+            <img src="~/images/register-img.png" class="img-fluid rounded registration-illustration" alt="Ilustração de bem-estar e psicologia">
         </div>
 
         @* Coluna do Formulário (Direita) *@
@@ -50,18 +50,23 @@
                     <input asp-for="Email" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Senha" class="form-label"></label>
-                        <input asp-for="Senha" class="form-control" />
-                        <span asp-validation-for="Senha" class="text-danger"></span>
+                <div class="form-group mb-3">
+                    <label asp-for="Senha" class="control-label"></label>
+                    <div class="password-container">
+                        <input asp-for="Senha" class="form-control" id="RegisterSenha" type="password" />
+                        <i class="bi bi-eye-slash-fill toggle-password" id="toggleRegisterSenha"></i>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="ConfirmarSenha" class="form-label"></label>
-                        <input asp-for="ConfirmarSenha" class="form-control" />
-                        <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
-                    </div>
+                    <span asp-validation-for="Senha" class="text-danger"></span>
                 </div>
+                <div class="form-group mb-3">
+                    <label asp-for="ConfirmarSenha" class="control-label"></label>
+                    <div class="password-container">
+                        <input asp-for="ConfirmarSenha" class="form-control" id="RegisterConfirmaSenha" type="password" />
+                        <i class="bi bi-eye-slash-fill toggle-password" id="toggleRegisterConfirmaSenha"></i>
+                    </div>
+                    <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
+                </div>
+
                 <div class="mb-3">
                     <label asp-for="WhatsApp" class="form-label"></label>
                     <input asp-for="WhatsApp" class="form-control" placeholder="(00) 00000-0000" />
@@ -107,6 +112,15 @@
                     e.preventDefault();
                 }
             });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setupPasswordToggle('RegisterSenha', 'toggleRegisterSenha');
+            setupPasswordToggle('RegisterConfirmaSenha', 'toggleRegisterConfirmaSenha');
         });
     </script>
 }

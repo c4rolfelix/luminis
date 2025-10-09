@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20251009145354_AtualizaTamanhoBiografia.cs" />
+    <Compile Remove="Migrations\20251009145354_AtualizaTamanhoBiografia.Designer.cs" />
     <Compile Remove="Models\ViewModels\ForgotPasswordViewModel.cs" />
     <Compile Remove="Models\ViewModels\ResetPasswordViewModel.cs" />
     <Compile Remove="Views\Account\ForgotPassword.cs" />
