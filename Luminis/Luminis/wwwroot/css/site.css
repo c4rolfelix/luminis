@@ -75,7 +75,6 @@ body {
     }
 
     .jumbotron hr {
-        border-color: var(--kumon-blue-medium);
     }
 
 /* Cards de Psicólogos */
@@ -155,15 +154,85 @@ body {
     color: #6c757d; 
     z-index: 10;
 }
-.registration-illustration {
-    /* 1. Ocupa 100% da largura da coluna */
+img.register-img {
     width: 100%;
-    /* 2. Define a altura máxima para um bom impacto visual */
-    max-height: 550px;
-    /* 3. Garante que a imagem se ajuste à proporção e não estique */
-    object-fit: contain;
-    /* 4. Garante que a altura se ajuste automaticamente */
+    max-height: 680px;
+    object-fit: cover;
+    object-position: center;
     height: auto;
-    /* 5. Centraliza a imagem na coluna (caso o width não seja 100%) */
+    display: block;
     margin: 0 auto;
+    box-shadow: 0 0 50px rgba(0, 123, 255, 0.3);
+    border-radius: 8px !important;
+    transition: all 0.3s ease-in-out;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, /* Transparente no topo */
+    rgba(0,0,0,1) 5%, /* Começa a ficar opaco */
+    rgba(0,0,0,1) 75%, /* Mantém opacidade no centro */
+    rgba(0,0,0,0) 100%); /* Transparente na base */
+
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+}
+
+.register-img:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 60px rgba(0, 123, 255, 0.6);
+}
+
+.login-img {
+    width: 100%;
+    height: 680px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 0 50px rgba(0, 123, 255, 0.3);
+    border-radius: 8px !important;
+    transition: all 0.3s ease-in-out;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, /* Transparente no topo */
+    rgba(0,0,0,1) 5%, /* Começa a ficar opaco */
+    rgba(0,0,0,1) 75%, /* Mantém opacidade no centro */
+    rgba(0,0,0,0) 100%); /* Transparente na base */
+
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 15%, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+}
+    .login-img:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 60px rgba(0, 123, 255, 0.6);
+    }
+
+.password-img {
+    width: 100%;
+    height: 680px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 0 50px rgba(0, 123, 255, 0.3);
+    border-radius: 8px !important;
+    transition: all 0.3s ease-in-out;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, /* Transparente no topo */
+    rgba(0,0,0,1) 5%, /* Começa a ficar opaco */
+    rgba(0,0,0,1) 75%, /* Mantém opacidade no centro */
+    rgba(0,0,0,0) 100%); /* Transparente na base */
+
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+}
+
+    .password-img:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 60px rgba(0, 123, 255, 0.6);
+    }
+
+.cta-main-text {
+    display: block;
+    font-size: 1.25rem; 
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.cta-sub-text {
+    display: block;
+    font-size: 0.85rem; 
+    opacity: 0.7; 
+    margin-top: 5px;
 }

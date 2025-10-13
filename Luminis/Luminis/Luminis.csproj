@@ -19,6 +19,8 @@
     <Content Remove="Views\Account\ForgotPassword.cshtml" />
     <Content Remove="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Remove="Views\Account\ResetPassword.cshtml" />
+    <Content Remove="wwwroot\images\register-img.png" />
+    <Content Remove="wwwroot\images\teste.jpg" />
   </ItemGroup>
 
   <ItemGroup>

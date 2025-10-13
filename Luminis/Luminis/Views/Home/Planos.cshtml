@@ -1,6 +1,23 @@
 ﻿@{
     ViewData["Title"] = "Nossos Planos";
+    string adminWhatsApp = "5531971882136";
 }
+
+<style>
+    .btn-whatsapp-custom {
+        background-color: #25D366 !important;
+        border-color: #25D366 !important;
+        color: white !important;
+        font-weight: bold;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+        .btn-whatsapp-custom:hover {
+            background-color: #128C7E !important;
+            border-color: #128C7E !important;
+            color: white !important;
+        }
+</style>
 
 <div class="container my-5">
     <h1 class="text-primary fw-bold text-center mb-4">Conheça Nossos Planos para Psicólogos</h1>
@@ -8,60 +25,91 @@
 
     <div class="row justify-content-center mt-5">
 
-        @* PLANO MENSAL *@
+        @* MENSAL *@
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h3 class="card-title text-primary">Plano Mensal</h3>
-                    <p class="card-text text-muted">Flexibilidade para começar.</p>
-                    <ul class="list-unstyled text-start mx-auto mt-4" style="max-width: 250px;">
-                        <li><i class="bi bi-check-circle-fill text-success"></i> Perfil público completo</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i> Busca por especialidade</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i> Contato via WhatsApp</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i> Suporte básico</li>
-                    </ul>
-                    <h4 class="card-subtitle mb-2 text-muted mt-4">R$ XX,XX / mês</h4>
-                    <p class="card-text text-sm">Pagamento via PIX direto com o administrador.</p>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg mt-3">Cadastre-se Agora!</a>
+                <div class="card-body text-center d-flex flex-column justify-content-between">
+                    <div>
+                        <h3 class="card-title text-primary">Plano Mensal</h3>
+                        <p class="card-text text-muted">Flexibilidade para começar.</p>
+                        <ul class="list-unstyled text-start mx-auto mt-4" style="max-width: 250px;">
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Perfil público completo</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Busca por especialidade</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Contato via WhatsApp</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Suporte básico</li>
+                        </ul>
+                        <h4 class="card-subtitle mb-2 text-muted mt-4">R$ XX,XX / mês</h4>
+                        <p class="card-text text-sm">Pagamento via PIX direto com o administrador.</p>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-3">
+                        @{
+                            string msgMensal = "Olá! Tenho interesse no Plano Mensal da Luminis. Poderia me ajudar com o pagamento?";
+                            string linkMensal = $"https://wa.me/{adminWhatsApp}?text={Uri.EscapeDataString(msgMensal)}";
+                        }
+                        <a href="@linkMensal" target="_blank" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-whatsapp"></i> Falar com Administrador
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        @* PLANO TRIMESTRAL (DESTAQUE) *@
+        @* TRIMESTRAL *@
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-lg" style="border: 3px solid var(--luminis-blue-dark);">
                 <div class="card-header text-white text-center fw-bold" style="background-color: var(--luminis-blue-dark);">
                     <h4 class="mb-0">Mais Popular!</h4>
                 </div>
-                <div class="card-body text-center">
-                    <h3 class="card-title text-primary">Plano Trimestral</h3>
-                    <p class="card-text text-muted">Economia e visibilidade aprimorada.</p>
-                    <ul class="list-unstyled text-start mx-auto mt-4" style="max-width: 250px;">
-                        <li><i class="bi bi-check-circle-fill text-success"></i> Todos os recursos do Plano Mensal</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i> Destaque na página inicial</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i> Desconto progressivo (a definir)</li>
-                    </ul>
-                    <h4 class="card-subtitle mb-2 text-muted mt-4">R$ XX,XX / trimestre</h4>
-                    <p class="card-text text-sm">Pagamento via PIX direto com o administrador.</p>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg mt-3">Cadastre-se Agora!</a>
+                <div class="card-body text-center d-flex flex-column justify-content-between">
+                    <div>
+                        <h3 class="card-title text-primary">Plano Trimestral</h3>
+                        <p class="card-text text-muted">Economia e visibilidade aprimorada.</p>
+                        <ul class="list-unstyled text-start mx-auto mt-4" style="max-width: 250px;">
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Todos os recursos do Plano Mensal</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Destaque na página inicial</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Desconto progressivo (a definir)</li>
+                        </ul>
+                        <h4 class="card-subtitle mb-2 text-muted mt-4">R$ XX,XX / trimestre</h4>
+                        <p class="card-text text-sm">Pagamento via PIX direto com o administrador.</p>
+                    </div>
+                    <div class="d-grid gap-2 mt-3">
+                        @{
+                            string msgTrimestral = "Olá! Tenho interesse no Plano Trimestral da Luminis. Poderia me ajudar com o pagamento?";
+                            string linkTrimestral = $"https://wa.me/{adminWhatsApp}?text={Uri.EscapeDataString(msgTrimestral)}";
+                        }
+                        <a href="@linkTrimestral" target="_blank" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-whatsapp"></i> Falar com Administrador
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        @* PLANO ANUAL *@
+        @* ANUAL *@
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h3 class="card-title text-primary">Plano Anual</h3>
-                    <p class="card-text text-muted">O melhor custo-benefício para o ano todo.</p>
-                    <ul class="list-unstyled text-start mx-auto mt-4" style="max-width: 250px;">
-                        <li><i class="bi bi-check-circle-fill text-success"></i> Todos os recursos do Plano Trimestral</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i> Suporte prioritário</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i> Maior desconto progressivo (a definir)</li>
-                    </ul>
-                    <h4 class="card-subtitle mb-2 text-muted mt-4">R$ XX,XX / ano</h4>
-                    <p class="card-text text-sm">Pagamento via PIX direto com o administrador.</p>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg mt-3">Cadastre-se Agora!</a>
+                <div class="card-body text-center d-flex flex-column justify-content-between">
+                    <div>
+                        <h3 class="card-title text-primary">Plano Anual</h3>
+                        <p class="card-text text-muted">O melhor custo-benefício para o ano todo.</p>
+                        <ul class="list-unstyled text-start mx-auto mt-4" style="max-width: 250px;">
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Todos os recursos do Plano Trimestral</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Suporte prioritário</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> Maior desconto progressivo (a definir)</li>
+                        </ul>
+                        <h4 class="card-subtitle mb-2 text-muted mt-4">R$ XX,XX / ano</h4>
+                        <p class="card-text text-sm">Pagamento via PIX direto com o administrador.</p>
+                    </div>
+                    <div class="d-grid gap-2 mt-3">
+                        @{
+                            string msgAnual = "Olá! Tenho interesse no Plano Anual da Luminis. Poderia me ajudar com o pagamento?";
+                            string linkAnual = $"https://wa.me/{adminWhatsApp}?text={Uri.EscapeDataString(msgAnual)}";
+                        }
+                        <a href="@linkAnual" target="_blank" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-whatsapp"></i> Falar com Administrador
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -72,9 +120,8 @@
         <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg">Cadastre-se Agora!</a>
     </div>
 
-    @* Botão Voltar *@
     <div class="text-center mt-4">
-        <a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-underline">
+        <a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-none">
             <i class="bi bi-arrow-left"></i> Voltar para a Home
         </a>
     </div>

@@ -84,6 +84,7 @@
                             <a asp-controller="Psicologo" asp-action="Details" asp-route-id="@psicologo.Id" class="btn btn-sm btn-outline-primary mt-2">Ver Perfil</a>
                         </div>
                     </div>
+
                 </div>
             }
         </div>
@@ -94,6 +95,14 @@
             Nenhum psicólogo encontrado com os critérios de busca.
         </div>
     }
+
+    @* INÍCIO DO REDIRECIONADOR PARA A HOME *@
+    <div class="mt-4 text-center">
+        <a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-none">
+            <i class="bi bi-arrow-left"></i> Voltar para a página principal
+        </a>
+    </div>
+    @* FIM DO REDIRECIONADOR PARA A HOME *@
 </div>
 
 @section Scripts {
