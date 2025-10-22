@@ -83,7 +83,7 @@
                                 <strong>CRP:</strong> @psicologo.CRP<br />
                                 <strong>Idade:</strong> @psicologo.GetIdade() anos
                                 <br />
-                                <strong>Especialidades:</strong>
+                                <strong>Abordagens:</strong>
                                 @if (psicologo.Especialidades != null && psicologo.Especialidades.Any())
                                 {
                                     @string.Join(", ", psicologo.Especialidades.Select(e => e.Nome).Take(2))
@@ -137,7 +137,7 @@
                                 <strong>CRP:</strong> @psicologo.CRP<br />
                                 <strong>Idade:</strong> @psicologo.GetIdade() anos
                                 <br />
-                                <strong>Especialidades:</strong>
+                                <strong>Abordagens:</strong>
                                 @if (psicologo.Especialidades != null && psicologo.Especialidades.Any())
                                 {
                                     @string.Join(", ", psicologo.Especialidades.Select(e => e.Nome).Take(2))

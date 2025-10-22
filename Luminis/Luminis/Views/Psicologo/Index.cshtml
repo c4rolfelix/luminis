@@ -7,14 +7,14 @@
 
 <div class="container mt-4">
     <h2 class="text-primary fw-bold">Encontre seu Psicólogo</h2>
-    <p class="lead">Selecione uma especialidade para encontrar o profissional ideal.</p>
+    <p class="lead">Selecione uma abordagem clínica para encontrar o profissional ideal.</p>
     <hr />
 
     <form asp-controller="Psicologo" asp-action="Index" method="get" class="mb-4">
         <div class="row g-2">
             <div class="col-12 col-md-8">
                 <select name="searchSpecialty" class="form-select" aria-label="Selecione uma especialidade">
-                    <option value="">Todas as Especialidades</option>
+                    <option value="">Todas as abordagens</option>
                     @if (especialidades != null)
                     {
                         foreach (var esp in especialidades)
@@ -66,7 +66,7 @@
                             <p class="card-text"><small class="text-muted">CRP: @psicologo.CRP</small></p>
                             <small class="text-muted">Idade: @psicologo.GetIdade() anos</small>
                             <p class="card-text mt-2">
-                                <strong>Especialidades:</strong>
+                                <strong>Abordagens:</strong>
                                 @if (psicologo.Especialidades != null && psicologo.Especialidades.Any())
                                 {
                                     <div class="d-flex flex-wrap gap-1 mt-1">
@@ -96,13 +96,11 @@
         </div>
     }
 
-    @* INÍCIO DO REDIRECIONADOR PARA A HOME *@
     <div class="mt-4 text-center">
         <a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-none">
             <i class="bi bi-arrow-left"></i> Voltar para a página principal
         </a>
     </div>
-    @* FIM DO REDIRECIONADOR PARA A HOME *@
 </div>
 
 @section Scripts {

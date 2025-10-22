@@ -42,6 +42,73 @@ namespace Luminis.Data
                 new Especialidade { Id = 16, Nome = "Psicopedagogia" },
                 new Especialidade { Id = 17, Nome = "Saúde Mental Perinatal" }
             );
+
+            // 3. Seed Data para Role "Admin" e Usuário Administrador
+            string adminRoleId = "a18c66e9-0260-466d-a789-21800f123456"; 
+            string adminUserId = "b18c66e9-0260-466d-a789-21800f123457"; 
+            var hasher = new PasswordHasher<IdentityUser>();
+
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = adminRoleId,
+                Name = "Admin",
+                NormalizedName = "ADMIN",
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            });
+
+            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
+            {
+                Id = adminUserId,
+                UserName = "admin@luminis.com",
+                NormalizedUserName = "ADMIN@LUMINIS.COM",
+                Email = "admin@luminis.com",
+                NormalizedEmail = "ADMIN@LUMINIS.COM",
+                EmailConfirmed = true,
+                PasswordHash = hasher.HashPassword(null, "AdminLuminis@2025"), 
+                SecurityStamp = Guid.NewGuid().ToString()
+            });
+
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = adminRoleId,
+                    UserId = adminUserId
+                });
+
+            // 4. Seed Data para o Psicólogo de Teste
+            string psicologoUserId = "c18c66e9-0260-466d-a789-21800f123458"; 
+
+            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
+            {
+                Id = psicologoUserId,
+                UserName = "psicologo@teste.com",
+                NormalizedUserName = "PSICOLOGO@TESTE.COM",
+                Email = "psicologo@teste.com",
+                NormalizedEmail = "PSICOLOGO@TESTE.COM",
+                EmailConfirmed = true,
+                PasswordHash = hasher.HashPassword(null, "SenhaTeste@123"),
+                SecurityStamp = Guid.NewGuid().ToString()
+            });
+
+            modelBuilder.Entity<Psicologo>().HasData(new Psicologo
+            {
+                Id = 1,
+                Nome = "Dr.",
+                Sobrenome = "Teste",
+                CRP = "01/12345",
+                CPF = "000.000.000-00", 
+                Email = "psicologo@teste.com",
+                Biografia = "Olá, sou o Dr. Teste, psicólogo com experiência em TCC.",
+                FotoUrl = "https://placehold.co/400x400/87CEFA/000000?text=PSICÓLOGO+TESTE",
+                WhatsApp = "5511999999999",
+                WhatsAppUrl = "https://wa.me/5511999999999",
+                DataNascimento = new DateTime(1985, 5, 20),
+                Ativo = true,
+                EmDestaque = true, 
+                DataCadastro = DateTime.Now
+            });
+
+
         }
     }
 }

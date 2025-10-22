@@ -206,6 +206,25 @@ namespace Luminis.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Psicologos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Ativo = true,
+                            Biografia = "Olá, sou o Dr. Teste, psicólogo com experiência em TCC.",
+                            CPF = "000.000.000-00",
+                            CRP = "01/12345",
+                            DataCadastro = new DateTime(2025, 10, 22, 18, 2, 21, 822, DateTimeKind.Local).AddTicks(9235),
+                            DataNascimento = new DateTime(1985, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EmDestaque = true,
+                            Email = "psicologo@teste.com",
+                            FotoUrl = "https://placehold.co/400x400/87CEFA/000000?text=PSICÓLOGO+TESTE",
+                            Nome = "Dr.",
+                            Sobrenome = "Teste",
+                            WhatsApp = "5511999999999",
+                            WhatsAppUrl = "https://wa.me/5511999999999"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -233,6 +252,15 @@ namespace Luminis.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "a18c66e9-0260-466d-a789-21800f123456",
+                            ConcurrencyStamp = "3320d7da-6184-4992-99d5-c6bf6449ec69",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -323,6 +351,40 @@ namespace Luminis.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "b18c66e9-0260-466d-a789-21800f123457",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "e0e4078b-a2f4-4a4e-8b53-32c44ea9d8bf",
+                            Email = "admin@luminis.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@LUMINIS.COM",
+                            NormalizedUserName = "ADMIN@LUMINIS.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAED4hZo9FTbJYCjmRUe259PI2gKaMZKYFeSjfFvRjTf1aP1I2GkrVupNLUv5N9WFjhQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "da4ec4bc-d5ce-4593-a0fc-734c1356bb0e",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@luminis.com"
+                        },
+                        new
+                        {
+                            Id = "c18c66e9-0260-466d-a789-21800f123458",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "8d481f8c-5223-4d9c-8149-a227cabeaf26",
+                            Email = "psicologo@teste.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "PSICOLOGO@TESTE.COM",
+                            NormalizedUserName = "PSICOLOGO@TESTE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPqcRSf7Hmwp3E4HknEesVG8nUCfi2RjA8AU9h8s2yo4ypt06LZRXmyBB8hTNfvyHQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "26de0657-24e2-4c81-af2a-45b407bd28b1",
+                            TwoFactorEnabled = false,
+                            UserName = "psicologo@teste.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -385,6 +447,13 @@ namespace Luminis.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "b18c66e9-0260-466d-a789-21800f123457",
+                            RoleId = "a18c66e9-0260-466d-a789-21800f123456"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

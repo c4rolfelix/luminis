@@ -54,7 +54,7 @@
                         @(string.IsNullOrEmpty(Model?.Biografia) ? "O psicólogo ainda não adicionou uma biografia." : Model?.Biografia)
                     </p>
 
-                    <h4 class="mt-4">Especialidades</h4>
+                    <h4 class="mt-4">Abordagens clínicas</h4>
                     @if (Model?.Especialidades != null && Model.Especialidades.Any())
                     {
                         <div class="d-flex flex-wrap gap-2">
@@ -66,7 +66,7 @@
                     }
                     else
                     {
-                        <p>Este psicólogo ainda não listou suas especialidades.</p>
+                        <p>Este psicólogo ainda não listou suas abordagens.</p>
                     }
                 </div>
             </div>

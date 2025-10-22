@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20251009145354_AtualizaTamanhoBiografia.cs" />
-    <Compile Remove="Migrations\20251009145354_AtualizaTamanhoBiografia.Designer.cs" />
     <Compile Remove="Models\ViewModels\ForgotPasswordViewModel.cs" />
     <Compile Remove="Models\ViewModels\ResetPasswordViewModel.cs" />
     <Compile Remove="Views\Account\ForgotPassword.cs" />
@@ -36,6 +34,10 @@
     <!-- Outros pacotes comuns do ASP.NET Core MVC (MANTENHA ESTES) -->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.7" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="App_Data\" />
   </ItemGroup>
 
 </Project>
