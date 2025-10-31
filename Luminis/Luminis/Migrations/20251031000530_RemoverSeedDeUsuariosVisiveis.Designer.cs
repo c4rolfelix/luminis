@@ -4,6 +4,7 @@ using Luminis.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Luminis.Migrations
 {
     [DbContext(typeof(LuminisDbContext))]
-    partial class LuminisDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251031000530_RemoverSeedDeUsuariosVisiveis")]
+    partial class RemoverSeedDeUsuariosVisiveis
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

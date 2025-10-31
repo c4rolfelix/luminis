@@ -1,45 +1,53 @@
 using Luminis.Data;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore; //
-using Microsoft.Extensions.DependencyInjection; //
+using Microsoft.Extensions.Configuration;
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adiciona suporte a controllers e views
 builder.Services.AddControllersWithViews();
 
-// Configura o banco de dados
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<LuminisDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
-// Configura o Identity com regras de senha fortes e suporte a roles
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
-    options.Lockout.MaxFailedAccessAttempts = 5;
-
-    // Regras de senha fortes
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequiredLength = 8;
 })
-.AddEntityFrameworkStores<LuminisDbContext>()
-.AddDefaultTokenProviders();
-
-// Configura os cookies de autenticação
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/Account/AccessDenied";
-});
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<LuminisDbContext>();
 
 var app = builder.Build();
 
-// Configura tratamento de erros e segurança
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<LuminisDbContext>();
+        dbContext.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocorreu um erro ao aplicar as migrações no banco de dados.");
+    }
+
+    try
+    {
+        await SeedIdentityData(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocorreu um erro ao semear os dados de usuários.");
+    }
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -54,9 +62,39 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Define a rota padrão
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+async Task SeedIdentityData(IServiceProvider services)
+{
+    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var configuration = services.GetRequiredService<IConfiguration>();
+
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
+    }
+
+    var adminEmail = configuration["AdminCredentials:Email"];
+    var adminPass = configuration["AdminCredentials:Password"];
+
+    if (!string.IsNullOrEmpty(adminEmail) && !string.IsNullOrEmpty(adminPass) && await userManager.FindByEmailAsync(adminEmail) == null)
+    {
+        var adminUser = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
+        await userManager.CreateAsync(adminUser, adminPass);
+        await userManager.AddToRoleAsync(adminUser, "Admin");
+    }
+
+    var testEmail = configuration["TestPsicologoCredentials:Email"];
+    var testPass = configuration["TestPsicologoCredentials:Password"];
+
+    if (!string.IsNullOrEmpty(testEmail) && !string.IsNullOrEmpty(testPass) && await userManager.FindByEmailAsync(testEmail) == null)
+    {
+        var testUser = new IdentityUser { UserName = testEmail, Email = testEmail, EmailConfirmed = true };
+        await userManager.CreateAsync(testUser, testPass);
+    }
+}

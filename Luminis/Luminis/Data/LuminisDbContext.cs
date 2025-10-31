@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore; 
-using Luminis.Models; 
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore; 
-using Microsoft.AspNetCore.Identity; 
+﻿using Microsoft.EntityFrameworkCore;
+using Luminis.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System; 
+using System.Linq;
 
 namespace Luminis.Data
 {
@@ -11,6 +13,7 @@ namespace Luminis.Data
         {
         }
 
+        public DbSet<Plano> Planos { get; set; }
         public DbSet<Psicologo> Psicologos { get; set; }
         public DbSet<Especialidade> Especialidades { get; set; }
 
@@ -18,11 +21,19 @@ namespace Luminis.Data
         {
             base.OnModelCreating(modelBuilder);
 
+
+            modelBuilder.Entity<Psicologo>()
+                .Property(p => p.SenhaHash)
+                .IsRequired(false);
+
             modelBuilder.Entity<Psicologo>()
                 .HasMany(p => p.Especialidades)
                 .WithMany(e => e.Psicologos)
-                .UsingEntity(j => j.ToTable("PsicologoEspecialidades"));
+                .UsingEntity("PsicologoEspecialidades");
 
+
+
+            // 1. Seed Data para Abordagnes
             modelBuilder.Entity<Especialidade>().HasData(
                 new Especialidade { Id = 1, Nome = "Terapia Cognitivo-Comportamental (TCC)" },
                 new Especialidade { Id = 2, Nome = "Psicanálise" },
@@ -43,52 +54,12 @@ namespace Luminis.Data
                 new Especialidade { Id = 17, Nome = "Saúde Mental Perinatal" }
             );
 
-            // 3. Seed Data para Role "Admin" e Usuário Administrador
-            string adminRoleId = "a18c66e9-0260-466d-a789-21800f123456"; 
-            string adminUserId = "b18c66e9-0260-466d-a789-21800f123457"; 
-            var hasher = new PasswordHasher<IdentityUser>();
-
-            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
-            {
-                Id = adminRoleId,
-                Name = "Admin",
-                NormalizedName = "ADMIN",
-                ConcurrencyStamp = Guid.NewGuid().ToString()
-            });
-
-            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
-            {
-                Id = adminUserId,
-                UserName = "admin@luminis.com",
-                NormalizedUserName = "ADMIN@LUMINIS.COM",
-                Email = "admin@luminis.com",
-                NormalizedEmail = "ADMIN@LUMINIS.COM",
-                EmailConfirmed = true,
-                PasswordHash = hasher.HashPassword(null, "AdminLuminis@2025"), 
-                SecurityStamp = Guid.NewGuid().ToString()
-            });
-
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
-                new IdentityUserRole<string>
-                {
-                    RoleId = adminRoleId,
-                    UserId = adminUserId
-                });
-
-            // 4. Seed Data para o Psicólogo de Teste
-            string psicologoUserId = "c18c66e9-0260-466d-a789-21800f123458"; 
-
-            modelBuilder.Entity<IdentityUser>().HasData(new IdentityUser
-            {
-                Id = psicologoUserId,
-                UserName = "psicologo@teste.com",
-                NormalizedUserName = "PSICOLOGO@TESTE.COM",
-                Email = "psicologo@teste.com",
-                NormalizedEmail = "PSICOLOGO@TESTE.COM",
-                EmailConfirmed = true,
-                PasswordHash = hasher.HashPassword(null, "SenhaTeste@123"),
-                SecurityStamp = Guid.NewGuid().ToString()
-            });
+            // 2. Seed Data para Planos
+            modelBuilder.Entity<Plano>().HasData(
+                new Plano { Id = 1, Nome = "Plano Mensal", Preco = 50.00m, Periodo = "mês", Descricao = "Flexibilidade para começar.", Recursos = "Perfil público completo;Busca por especialidade;Contato via WhatsApp;Suporte básico", Destaque = false },
+                new Plano { Id = 2, Nome = "Plano Trimestral", Preco = 135.00m, Periodo = "trimestre", Descricao = "Economia e visibilidade aprimorada.", Recursos = "Todos os recursos do Plano Mensal;Destaque na página inicial;Desconto progressivo", Destaque = true },
+                new Plano { Id = 3, Nome = "Plano Anual", Preco = 480.00m, Periodo = "ano", Descricao = "O melhor custo-benefício.", Recursos = "Todos os recursos do Plano Trimestral;Suporte prioritário;Maior desconto", Destaque = false }
+            );
 
             modelBuilder.Entity<Psicologo>().HasData(new Psicologo
             {
@@ -96,19 +67,17 @@ namespace Luminis.Data
                 Nome = "Dr.",
                 Sobrenome = "Teste",
                 CRP = "01/12345",
-                CPF = "000.000.000-00", 
-                Email = "psicologo@teste.com",
+                CPF = "000.000.000-00", // CPF de teste
+                Email = "psicologo@teste.com", // Email usado para ligar ao IdentityUser
                 Biografia = "Olá, sou o Dr. Teste, psicólogo com experiência em TCC.",
                 FotoUrl = "https://placehold.co/400x400/87CEFA/000000?text=PSICÓLOGO+TESTE",
                 WhatsApp = "5511999999999",
                 WhatsAppUrl = "https://wa.me/5511999999999",
                 DataNascimento = new DateTime(1985, 5, 20),
                 Ativo = true,
-                EmDestaque = true, 
+                EmDestaque = true,
                 DataCadastro = DateTime.Now
             });
-
-
         }
     }
 }
