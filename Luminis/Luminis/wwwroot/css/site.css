@@ -236,3 +236,7 @@ img.register-img {
     opacity: 0.7; 
     margin-top: 5px;
 }
+
+.navbar-brand {
+    text-decoration-color: #004587
+}

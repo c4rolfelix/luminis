@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Luminis.styles.css" asp-append-version="true" />
+    <link rel="icon" href="~/faviconpsicologia.ico" type="image/x-icon" />
+
 
     <style>
         @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
@@ -32,7 +34,10 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand text-primary fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Luminis</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/psicologia_logo.png" alt="Luminis Logo" style="height: 50px;" />
+                </a>
+                <a class="navbar-brand text-primary fw-bold" style="" asp-area="" asp-controller="Home" asp-action="Index">Psicologia Luminis</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
